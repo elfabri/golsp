@@ -1,0 +1,2 @@
+# golsp
+Language server protocol
