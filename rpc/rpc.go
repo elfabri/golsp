@@ -48,7 +48,7 @@ func DecodeMessage(msg []byte) (string, []byte, error) {
 }
 
 // type SplitFunc func(data []byte, atEOF bool) (advance int, token []byte, err error)
-// we are not usign atEOF
+// we are not usign atEOF (at End Of File)
 
 func Split(data []byte, _ bool) (advance int, token []byte, err error) {
     header, content, found := bytes.Cut(data, []byte{'\r', '\n', '\r', '\n'})

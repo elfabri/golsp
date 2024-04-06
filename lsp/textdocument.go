@@ -22,3 +22,12 @@ type TextDocumentItem struct {
 	 */
     Text string `json:"text"`
 }
+
+type TextDocumentIdentifier struct {
+    URI string `json:"uri"`
+}
+
+type VersionDocumentIdentifier struct {
+    TextDocumentIdentifier
+    Version int `json:"version"`
+}
