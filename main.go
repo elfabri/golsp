@@ -6,6 +6,7 @@ import (
 	"golsp/analysis"
 	"golsp/lsp"
 	"golsp/rpc"
+	"io"
 	"log"
 	"os"
 )
@@ -19,6 +20,7 @@ func main() {
                                 // untill we get the message
 
     state := analysis.NewState()
+    writer := os.Stdout
 
     for scanner.Scan() {
         msg := scanner.Bytes()
@@ -28,11 +30,11 @@ func main() {
             continue
         }
 
-        handleMessage(logger, state, method, contents)
+        handleMessage(logger, writer, state, method, contents)
     }
 }
 
-func handleMessage(logger *log.Logger, state analysis.State, method string, contents []byte) {
+func handleMessage(logger *log.Logger, writer io.Writer, state analysis.State, method string, contents []byte) {
     logger.Printf("Recived msg with method: %s", method)
 
     switch method {
@@ -48,10 +50,8 @@ func handleMessage(logger *log.Logger, state analysis.State, method string, cont
 
         // reply
         msg := lsp.NewInitializeResponse(request.ID)
-        reply := rpc.EncodeMessage(msg)
+        writeResponse(writer, msg)
 
-        writer := os.Stdout
-        writer.Write([]byte(reply))
 
         logger.Print("Sent the reply")
 
@@ -82,7 +82,42 @@ func handleMessage(logger *log.Logger, state analysis.State, method string, cont
         for _, change := range request.Params.ContentChanges {
             state.UpdateDocument(request.Params.TextDocument.URI, change.Text)
         }
+
+    case "textDocument/hover":
+        var request lsp.HoverRequest
+        if err := json.Unmarshal(contents, &request); err != nil {
+            logger.Printf("textDocument/hover %s", err)
+            return
+        }
+
+        // Create Response and write it back
+        response := state.Hover(
+            request.ID,
+            request.Params.TextDocument.URI,
+            request.Params.Position)
+
+        writeResponse(writer, response)
+
+    case "textDocument/definition":
+        var request lsp.DefinitionRequest
+        if err := json.Unmarshal(contents, &request); err != nil {
+            logger.Printf("textDocument/definition %s", err)
+            return
+        }
+
+        // Create Response and write it back
+        response := state.Definition(
+            request.ID,
+            request.Params.TextDocument.URI,
+            request.Params.Position)
+
+        writeResponse(writer, response)
     }
+}
+
+func writeResponse(writer io.Writer, msg any) {
+    reply := rpc.EncodeMessage(msg)
+    writer.Write([]byte(reply))
 }
 
 // we can't print the std out, so we need to log it into a file

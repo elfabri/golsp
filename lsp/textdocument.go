@@ -31,3 +31,23 @@ type VersionDocumentIdentifier struct {
     TextDocumentIdentifier
     Version int `json:"version"`
 }
+
+type TextDocumentPositionParams struct {
+    TextDocument TextDocumentIdentifier `json:"TextDocument"`
+    Position Position `json:"position"`
+}
+
+type Position struct {
+    Line int `json:"line"`
+    Character int `json:"character"`
+}
+
+type Location struct {
+    URI string `json:"uri"`
+    Range Range `json:"range"`
+}
+
+type Range struct {
+    Start Position `json:"start"`
+    End Position `json:"end"`
+}
