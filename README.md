@@ -4,3 +4,5 @@ Language Server Protocol in Go.
 Following TJ DeVries explanation on how LSP work, and building one with Go.
 
 NOT using VS C*de btw
+
+Neovim (BTW)

@@ -30,6 +30,7 @@ type ServerCapabilities struct {
     HoverProvider bool `json:"hoverProvider"`
     DefinitionProvider bool `json:"definitionProvider"`
     CodeActionProvider bool `json:"codeActionProvider"`
+    CompletionProvider map[string]any `json:"completionProvider"`
 }
 
 type ServerInfo struct {
@@ -49,6 +50,7 @@ func NewInitializeResponse(id int) InitializeResponse {
                 HoverProvider: true,
                 DefinitionProvider: true,
                 CodeActionProvider: true,
+                CompletionProvider: map[string]any{},
             },
             ServerInfo: ServerInfo{
                 Name:       "educationalsp",
