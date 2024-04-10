@@ -1,7 +1,7 @@
 # golsp
-Language Server Protocol in Go.
+Language Server Protocol tested in mark down files, built with Go.
 
-Following TJ DeVries explanation on how LSP work, and building one with Go.
+Following TJ DeVries explanation on how LSP work, while building one with Go.
 
 NOT using VS C*de btw
 
